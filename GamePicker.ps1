@@ -28,40 +28,13 @@ $ErrorActionPreference = "SilentlyContinue"
 
 
 #----------------------------------------------------------[Declarations]----------------------------------------------------------
-
-#Script Version
-$sScriptVersion = "1.0"
-
-#-----------------------------------------------------------[Functions]------------------------------------------------------------
-
-<#
-Function <FunctionName>{
-  Param()
-  
-  Begin{
-  }
-  
-  Process{
-    Try{
-      <code goes here>
-    }
-    
-    Catch{
-      Break
-    }
-  }
-  
-  End{
-  }
-}
-#>
-
 # Import CSV Files from Current Folder into Variable for PICKING!
 $GameListAll = Import-Csv -Path (Get-ChildItem -Path . -Filter '*.csv') | Sort-Object -Property Title
 
 # Game List Filtered by Not Played
 $GameListNotPlayed = $GameListAll | Sort-Object -Property Title | Where-Object -Property Played -NotMatch 'Yes'
 
+#-----------------------------------------------------------[Functions]------------------------------------------------------------
 do {
 
   Write-Output "Game List to choose from:
@@ -70,27 +43,36 @@ do {
     2) Not Played Games"
 
   # User input variable choice
-  $UserChoiceGameList = Read-Host "Choose Game List "
+  $UserChoiceGameList = Read-Host -Prompt "Choose Game List "
 
   # User input number of games to pick
-  $UserChoiceNumberGames = Read-Host "Choose Number of Games to pick "
+  $UserChoiceNumberGames = Read-Host -Prompt "Choose Number of Games to pick "
 
   if($UserChoiceGameList -eq 1 -AND $UserChoiceNumberGames -eq 1){
+    Write-Output "You chose all Games, and 1 game!"
     Write-Output "Your game is: " + $GameListAll | Get-Random | Select-Object -Property Played,Title | Format-Table
-  }else{
+  }elseif ($UserChoiceGameList -eq 1 -AND $UserChoiceNumberGames -gt 1){
+    Write-Output "You chose all Games, and $UserChoiceNumberGames games!"
     Write-Output "Your games are: " + $GameListAll | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Title | Format-Table
   }
 
   if($UserChoiceGameList -eq 2 -AND $UserChoiceNumberGames -eq 1){
+    Write-Output "You chose Not Played Games, and 1 game!"
     Write-Output "Your game is: " + $GameListNotPlayed | Get-Random | Select-Object -Property Played,Title | Format-Table
-  }else{
+  }elseif ($UserChoiceGameList -eq 2 -AND $UserChoiceNumberGames -gt 1){
+    Write-Output "You chose Not Played Games, and $UserChoiceNumberGames games!"
     Write-Output "Your games are: " + $GameListNotPlayed | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Title | Format-Table
   }
 
-  Write-Output "
-  You the Dice have been cast! Will you proceed?"
-  Read-Host "Choose Again? "
+  Write-Output "You the Dice have been cast! Will you proceed?"
+  Write-output ""
+  Write-output ""
+  Write-output "0 exit, 1 to continue"
+  $UserChoiceGameList = Read-Host "Choose Again? "
 
+
+  Write-output ""
+  Write-output ""
 } while ($UserChoiceGameList -ne 0)
 
 
