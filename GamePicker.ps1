@@ -29,7 +29,7 @@ $ErrorActionPreference = "SilentlyContinue"
 
 #----------------------------------------------------------[Declarations]----------------------------------------------------------
 # Import CSV Files from Current Folder into Variable for PICKING!
-$GameListAll = Import-Csv -Path (Get-ChildItem -Path . -Filter '*.csv') | Sort-Object -Property Title
+$GameListAll = Import-Csv -Path (Get-ChildItem -Path . -Filter '*.tsv') -Delimiter "`t" | Sort-Object -Property Title
 
 # Game List Filtered by Not Played
 $GameListNotPlayed = $GameListAll | Sort-Object -Property Title | Where-Object -Property Played -NotMatch 'Yes'
@@ -48,8 +48,10 @@ do {
     1) All Games
     2) Not Played Games
     3) Not Played - Play
-    4) Played - Play"
+    4) Played - Play
+    "
 
+  Write-Output "Total # of games in list: " $GameListAll.Length
   # User input variable choice
   $UserChoiceGameList = Read-Host -Prompt "Choose Game List "
 
@@ -58,34 +60,34 @@ do {
 
   if($UserChoiceGameList -eq 1 -AND $UserChoiceNumberGames -eq 1){
     Write-Output "You chose all Games, and 1 game!"
-    Write-Output "Your game is: " + $GameListAll | Get-Random | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your game is: " + $GameListAll | Get-Random | Select-Object -Property Played,Play?,Title,System | Format-Table
   }elseif ($UserChoiceGameList -eq 1 -AND $UserChoiceNumberGames -gt 1){
     Write-Output "You chose all Games, and $UserChoiceNumberGames games!"
-    Write-Output "Your games are: " + $GameListAll | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your games are: " + $GameListAll | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title,System | Format-Table
   }
 
   if($UserChoiceGameList -eq 2 -AND $UserChoiceNumberGames -eq 1){
     Write-Output "You chose Not Played Games, and 1 game!"
-    Write-Output "Your game is: " + $GameListNotPlayed | Get-Random | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your game is: " + $GameListNotPlayed | Get-Random | Select-Object -Property Played,Play?,Title,System | Format-Table
   }elseif ($UserChoiceGameList -eq 2 -AND $UserChoiceNumberGames -gt 1){
     Write-Output "You chose Not Played Games, and $UserChoiceNumberGames games!"
-    Write-Output "Your games are: " + $GameListNotPlayed | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your games are: " + $GameListNotPlayed | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title,System | Format-Table
   }
 
   if($UserChoiceGameList -eq 3 -AND $UserChoiceNumberGames -eq 1){
     Write-Output "You chose Not Played - Play Games, and 1 game!"
-    Write-Output "Your game is: " + $GameListNotPlayedPlay | Get-Random | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your game is: " + $GameListNotPlayedPlay | Get-Random | Select-Object -Property Played,Play?,Title,System | Format-Table
   }elseif ($UserChoiceGameList -eq 3 -AND $UserChoiceNumberGames -gt 1){
     Write-Output "You chose Not Played Games, and $UserChoiceNumberGames games!"
-    Write-Output "Your games are: " + $GameListNotPlayedPlay | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your games are: " + $GameListNotPlayedPlay | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title,System | Format-Table
   }
 
   if($UserChoiceGameList -eq 4 -AND $UserChoiceNumberGames -eq 1){
     Write-Output "You chose Played - Play Games, and 1 game!"
-    Write-Output "Your game is: " + $GameListPlayedPlay | Get-Random | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your game is: " + $GameListPlayedPlay | Get-Random | Select-Object -Property Played,Play?,Title,System | Format-Table
   }elseif ($UserChoiceGameList -eq 4 -AND $UserChoiceNumberGames -gt 1){
     Write-Output "You chose Played - Play Games, and $UserChoiceNumberGames games!"
-    Write-Output "Your games are: " + $GameListPlayedPlay | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title | Format-Table
+    Write-Output "Your games are: " + $GameListPlayedPlay | Get-Random -Count $UserChoiceNumberGames | Select-Object -Property Played,Play?,Title,System | Format-Table
   }
 
 
@@ -99,6 +101,8 @@ do {
 
   Write-output ""
   Write-output ""
+
+  Clear-Host
 } while ($UserChoiceGameList -ne 0)
 
 
